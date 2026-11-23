@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Bill Calculator – TCPUD (2026 &amp; 2027)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}html{font-size:16px}body{font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;background:#f5f7fa;color:#111827;line-height:1.5;padding:32px 16px 64px;margin:0}button,input,select{font:inherit}
+:root{--blue:#1058a0;--blue-lt:#deedfb;--blue-dk:#0b3d6b;--green:#166b48;--amber:#8a5500;--red:#b0281c;--gray-1:#f5f7fa;--gray-2:#66758a;--gray-3:#526075;--gray-4:#374151;--text:#111827;--radius:10px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.card{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:680px;margin:auto;padding:36px 40px;border-radius:16px}.header{margin-bottom:25px}.header-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-lt);color:var(--blue-dk);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:10px}.header h1{font-size:26px;color:var(--blue-dk);line-height:1.25;margin:0 0 6px}.header p{margin:0;color:var(--gray-4)}
+.field{margin-bottom:26px}.field label{display:block;font-weight:600;margin-bottom:8px;color:var(--gray-4)}.field select,.field input[type=text]{width:100%;padding:11px 14px;border:2px solid var(--gray-2);border-radius:var(--radius);font-size:16px;color:var(--text);background:#fff;min-height:48px}.field select{appearance:auto}.field-hint{margin-top:6px;font-size:14px;color:var(--gray-3)}.field input.input-error{border-color:var(--red)}.error-msg{display:none;margin-top:6px;font-size:15px;color:var(--red);font-weight:600}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}.year-field{margin-bottom:26px}.year-field legend{font-weight:700;color:var(--gray-4);padding:0;margin-bottom:10px}.year-field fieldset{border:0;margin:0;padding:0}.year-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.year-switch input{position:absolute;width:1px;height:1px;opacity:0}.year-switch label{display:block;cursor:pointer;border:2px solid var(--gray-2);background:#fff;border-radius:10px;text-align:center;padding:10px 12px;min-height:48px;color:var(--gray-4);font-size:17px;font-weight:700}.year-switch input:checked+label{border-color:var(--blue-dk);background:var(--blue-lt);color:var(--blue-dk)}.year-switch input:focus-visible+label{outline:3px solid var(--blue);outline-offset:3px}.year-switch label:hover{border-color:var(--blue)}.year-switch small{display:block;font-size:12px;font-weight:500}.year-note{font-size:14px;color:var(--gray-3);margin:9px 0 0}
+.consumption-row{display:flex;gap:10px;align-items:flex-start}.consumption-row input{flex:1;min-width:0}.btn-calc{padding:11px 20px;background:var(--blue);color:white;border:0;border-radius:var(--radius);font-weight:700;min-height:48px;cursor:pointer;white-space:nowrap}.btn-calc:hover{background:var(--blue-dk)}
+.section-label{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gray-3);margin:0 0 10px}.rate-table{width:100%;border-collapse:collapse;margin:0 0 8px}.rate-table caption{font-size:14px;text-align:left;color:var(--gray-3);padding-bottom:6px}.rate-table th{font-size:14px;font-weight:700;text-align:left;padding:8px;border-bottom:2px solid var(--gray-2)}.rate-table th:last-child{text-align:right}.rate-table td,.rate-table tbody th{padding:10px 8px;border-bottom:1px solid var(--gray-2);vertical-align:middle;font-size:15px}.rate-table tbody tr:last-child td,.rate-table tbody tr:last-child th{border-bottom:0}.rate-table tbody th{font-size:15px;font-weight:500;color:var(--gray-4);vertical-align:middle;border-bottom:1px solid var(--gray-2);text-align:left}.rate-table td.bracket-cost{text-align:right;font-weight:600;white-space:nowrap}.rate-table tr.active-tier td,.rate-table tr.active-tier th{background:var(--blue-lt)}.rate-table tr.active-tier th{color:var(--blue-dk);font-weight:700}.tier-badge{display:none;font-size:11px;font-weight:700;background:var(--blue-dk);color:#fff;border-radius:4px;padding:2px 6px;margin-left:5px}.rate-table tr.active-tier .tier-badge{display:inline}.base-rate-row{display:flex;justify-content:space-between;gap:12px;border-top:2px solid var(--gray-2);padding:12px 8px;color:var(--gray-4)}.base-rate-row span:last-child{font-family:ui-monospace,Consolas,monospace;font-weight:500;white-space:nowrap}
+.total-box{background:var(--gray-1);border:2px solid var(--gray-2);border-radius:var(--radius);padding:16px 20px;margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}.total-label{font-weight:700}.total-label small{font-size:14px;font-weight:400;color:var(--gray-3);display:block}.total-amount{font:500 27px ui-monospace,Consolas,monospace;white-space:nowrap}.estimate-note{margin:12px 0 0;color:var(--gray-3);font-size:14px}
+.tips-panel{display:none;margin-top:28px;border-radius:var(--radius);overflow:hidden;border:2px solid var(--gray-2)}.tips-panel.visible{display:block}.tips-header{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 18px;border:0;background:#edf8f3;cursor:pointer;text-align:left;gap:10px}.tips-header-left{display:flex;align-items:center;gap:10px}.tips-icon{display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:#c5ecd8;color:var(--green);border-radius:8px;flex-shrink:0}.tips-title{font-weight:700;font-size:15px;color:#0e4f31}.tips-title,.tips-subtitle{display:block}.tips-subtitle{font-size:13px;color:#166b48}.tips-chevron{flex-shrink:0}.tips-body{padding:0 18px 18px;border-top:1px solid var(--gray-2)}.tips-body[hidden]{display:none}.tips-panel.tier-2{border-color:#b99736}.tips-panel.tier-2 .tips-header{background:#fdf8e8}.tips-panel.tier-2 .tips-icon{background:#f5e8a0;color:var(--amber)}.tips-panel.tier-2 .tips-title,.tips-panel.tier-2 .tips-subtitle{color:#5c3800}.tips-panel.tier-3{border-color:#ca7e49}.tips-panel.tier-3 .tips-header{background:#fef3ea}.tips-panel.tier-3 .tips-icon{background:#fad4b0;color:#8a3a0a}.tips-panel.tier-3 .tips-title,.tips-panel.tier-3 .tips-subtitle{color:#6b2600}.tips-panel.tier-4{border-color:#b84e4e}.tips-panel.tier-4 .tips-header{background:#fef2f2}.tips-panel.tier-4 .tips-icon{background:#fcc8c8;color:var(--red)}.tips-panel.tier-4 .tips-title,.tips-panel.tier-4 .tips-subtitle{color:#7a1010}
+.savings-callout{background:var(--gray-1);border-radius:8px;padding:12px 14px;margin:14px 0;display:flex;gap:12px;font-size:15px}.tip-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin:16px 0;padding:0}.tip-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--gray-2);border-radius:8px}.tip-emoji{font-size:18px;flex-shrink:0}.tip-content{flex:1;min-width:0}.tip-action{font-size:15px;font-weight:700}.tip-detail{font-size:14px;color:var(--gray-4);margin-top:3px}.tip-savings{font-size:12px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--blue-lt);color:var(--blue-dk)}.rebate-link{display:block;padding:12px 14px;background:var(--blue-lt);color:var(--blue-dk);border-radius:8px;font-size:15px;font-weight:700;text-decoration:underline}.rebate-link-sub{font-size:13px;font-weight:400;display:block}.tips-body a{color:var(--blue-dk);text-decoration:underline}
+@media(max-width:600px){.card{padding:24px 18px}.rate-table th,.rate-table td,.rate-table tbody th{padding:9px 4px;font-size:13px}.total-box{align-items:flex-start;flex-direction:column}.total-amount{font-size:25px}.tip-item{flex-wrap:wrap}.tip-savings{margin-left:28px}}@media(max-width:380px){.consumption-row{flex-wrap:wrap}.btn-calc{width:100%}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="card">
+ <header class="header"><div class="header-badge" id="yearBadge">TCPUD · 2026 Rates</div><h1>Water Bill Calculator</h1><p>Estimate your monthly residential water charge based on meter size and usage.</p></header>
+ <div class="year-field"><fieldset><legend>Select Rate Year</legend><div class="year-switch"><div><input id="year2026" name="rateYear" type="radio" value="2026" checked><label for="year2026">2026<small>Current rates</small></label></div><div><input id="year2027" name="rateYear" type="radio" value="2027"><label for="year2027">2027<small>Effective January 1</small></label></div></div></fieldset><p class="year-note" id="yearNote">2026 adopted water rates.</p></div>
+ <div class="field"><label for="baseRate">Meter Size</label><select id="baseRate" aria-describedby="baseRateDesc"><option value="0">3/4&quot; — Most Common</option><option value="1">1&quot;</option><option value="2">1 1/4&quot;</option><option value="3">1 1/2&quot;</option><option value="4">2&quot;</option><option value="5">3&quot;</option><option value="6">4&quot;</option></select><div class="field-hint" id="baseRateDesc">The meter size is shown on your water bill. Monthly base rate updates with the selected year.</div></div>
+ <div class="field"><label for="consumption">Monthly Water Use (gallons)</label><div class="consumption-row"><input type="text" id="consumption" placeholder="e.g. 12000" inputmode="numeric" autocomplete="off" aria-describedby="consumptionHint errorMsg" aria-invalid="false"><button class="btn-calc" id="calculateButton" type="button">Calculate</button></div><div class="error-msg" id="errorMsg" role="alert">Enter a valid, nonnegative whole number of gallons.</div><div class="field-hint" id="consumptionHint">Enter gallons, not thousands of gallons. Commas are allowed.</div></div>
+ <table class="rate-table"><caption id="rateTableCaption">2026 residential water usage breakdown (per 1,000 gallons)</caption><thead><tr><th scope="col">Tier</th><th scope="col">Rate</th><th scope="col">Charge</th></tr></thead><tbody>
+ <tr id="row1"><th scope="row">0–8,000 gal <span class="tier-badge">Current</span></th><td id="tierRate1">$4.10 / 1k gal</td><td class="bracket-cost" id="firstBracket">—</td></tr>
+ <tr id="row2"><th scope="row">8,001–20,000 gal <span class="tier-badge">Current</span></th><td id="tierRate2">$5.35 / 1k gal</td><td class="bracket-cost" id="secondBracket">—</td></tr>
+ <tr id="row3"><th scope="row">20,001–40,000 gal <span class="tier-badge">Current</span></th><td id="tierRate3">$7.34 / 1k gal</td><td class="bracket-cost" id="thirdBracket">—</td></tr>
+ <tr id="row4"><th scope="row">40,001+ gal <span class="tier-badge">Current</span></th><td id="tierRate4">$14.14 / 1k gal</td><td class="bracket-cost" id="fourthBracket">—</td></tr>
+ </tbody></table>
+ <div class="base-rate-row"><span id="baseRateLabel">Metered base rate (3/4&quot;)</span><span id="baseRateDisplay">$116.69</span></div>
+ <div class="total-box" role="region" aria-label="Estimated monthly water bill"><div class="total-label"><span id="totalYearLabel">2026 Total Monthly Water Bill</span><small>Metered base rate + tiered consumption charges</small></div><output class="total-amount" id="total">—</output></div>
+ <p class="sr-only" id="calculationStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+ <p class="estimate-note">Estimates exclude sewer charges, the Infrastructure Improvement Charge (where applicable), and other special service charges. Actual bills may differ.</p>
+ <section class="tips-panel" id="tipsPanel" aria-label="Water conservation tips"><button class="tips-header" id="tipsToggle" type="button" aria-expanded="false" aria-controls="tipsBody"><span class="tips-header-left"><span class="tips-icon" aria-hidden="true">💧</span><span><span class="tips-title" id="tipsTitle"></span><span class="tips-subtitle" id="tipsSubtitle"></span></span></span><svg class="tips-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="tips-body" id="tipsBody" hidden></div></section>
+</main>
+<script>
+'use strict';
+// 2027 rates were adopted by the TCPUD Board on November 20, 2026; 2026 matches the existing TCPUD calculator.
+const RATES={
+ '2026':{base:[116.69,194.87,291.72,388.57,621.95,1945.20,3889.24],tiers:[4.10,5.35,7.34,14.14]},
+ '2027':{base:[127.78,213.38,319.43,425.48,681.04,2129.99,4258.72],tiers:[4.49,5.86,8.04,15.48]}
+};
+const METER_LABELS=['3/4"','1"','1 1/4"','1 1/2"','2"','3"','4"'];
+const LIMITS=[8000,20000,40000,Infinity];
+const $=id=>document.getElementById(id);
+const fmt=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const selectedYear=()=>document.querySelector('input[name="rateYear"]:checked').value;
+const currentRates=()=>RATES[selectedYear()];
+function usageCost(gallons,rates=currentRates().tiers){let charge=0,lower=0;for(let i=0;i<4;i++){charge+=Math.max(0,Math.min(gallons,LIMITS[i])-lower)*rates[i]/1000;lower=LIMITS[i];}return charge;}
+function clearError(){ $('consumption').classList.remove('input-error');$('consumption').setAttribute('aria-invalid','false');$('errorMsg').style.display='none';}
+function showError(){ $('consumption').classList.add('input-error');$('consumption').setAttribute('aria-invalid','true');$('errorMsg').style.display='block'; }
+function updateRateUI(){const year=selectedYear(),r=currentRates(),i=Number($('baseRate').value);$('yearBadge').textContent='TCPUD · '+year+' Rates';$('rateTableCaption').textContent=year+' residential water usage breakdown (per 1,000 gallons)';$('totalYearLabel').textContent=year+' Total Monthly Water Bill';$('baseRateLabel').textContent='Metered base rate ('+METER_LABELS[i]+')';$('baseRateDisplay').textContent=fmt(r.base[i]);for(let k=0;k<4;k++)$('tierRate'+(k+1)).textContent=fmt(r.tiers[k])+' / 1k gal';$('yearNote').textContent=year==='2027'?'The 2027 rates were adopted by the TCPUD Board of Directors on November 20, 2026, as part of the annual budget process and take effect January 1, 2027.':'2026 adopted water rates.';calculate(false);}
+function resetDisplay(){['firstBracket','secondBracket','thirdBracket','fourthBracket'].forEach(id=>$(id).textContent='—');for(let i=1;i<=4;i++){$('row'+i).classList.remove('active-tier');}$('total').textContent='—';$('tipsPanel').className='tips-panel';$('tipsBody').hidden=true;$('tipsToggle').setAttribute('aria-expanded','false');}
+function calculate(showValidation=true){const raw=$('consumption').value.trim().replace(/,/g,''),r=currentRates(),base=r.base[Number($('baseRate').value)];$('baseRateDisplay').textContent=fmt(base);$('baseRateLabel').textContent='Metered base rate ('+METER_LABELS[Number($('baseRate').value)]+')';if(!raw){clearError();resetDisplay();if(showValidation)$('calculationStatus').textContent='Enter monthly water use in gallons to calculate your bill.';return;}if(!/^\d+$/.test(raw)||!Number.isSafeInteger(Number(raw))){if(showValidation)showError();resetDisplay();return;}clearError();const gallons=Number(raw);let lower=0;const cells=['firstBracket','secondBracket','thirdBracket','fourthBracket'];let active=0;for(let i=0;i<4;i++){const used=Math.max(0,Math.min(gallons,LIMITS[i])-lower),charge=used*r.tiers[i]/1000;$(cells[i]).textContent=used>0?fmt(charge):'—';if(gallons>lower)active=i;$('row'+(i+1)).classList.toggle('active-tier',false);lower=LIMITS[i];}if(gallons>0)$('row'+(active+1)).classList.add('active-tier');$('total').textContent=fmt(base+usageCost(gallons,r.tiers));if(showValidation)$('calculationStatus').textContent=selectedYear()+' estimated monthly water bill: '+$('total').textContent+'.';renderTips(gallons,active,r.tiers);}
+const eyeLink='Learn more about EyeOnWater at TCPUD';
+const TIER_TIPS={
+ 1:{title:'Great — you\'re in the lowest usage tier!',subtitle:'Keep it up. A few easy habits can maintain your savings.',tips:[['🚿','Take shorter showers','Cutting 2 minutes saves about 10 gallons per shower.','~200 gal/mo'],['🪥','Turn off the tap while brushing','A running faucet can use about 2 gallons per minute.','~120 gal/mo'],['🌿','Water plants in the morning','Reduce evaporation by watering during cooler hours.','varies'],['📱','Sign up for EyeOnWater','Track daily usage and set leak alerts. '+eyeLink,'stay on track']]},
+ 2:{title:'Moderate usage — room to save',subtitle:'Small changes could help reduce your water bill.',tips:[['🚽','Check for toilet leaks','Pick up free leak detection tabs at the TCPUD office.','potentially significant'],['🧺','Run full laundry loads','Run the washing machine with full loads whenever possible.','~300 gal/mo'],['🚗','Use a commercial car wash','Commercial washes often recycle water and contain runoff.','varies'],['🪴','Switch to drip irrigation','Target water directly to plant roots.','varies'],['📱','Sign up for EyeOnWater','Monitor daily usage and get leak alerts. '+eyeLink,'catch leaks early']]},
+ 3:{title:'High usage — Tier 3 rates apply',subtitle:'Consider checking for leaks and reducing outdoor use.',tips:[['🚿','Install a low-flow showerhead','Efficient fixtures use less water while maintaining comfort.','varies'],['🚽','Upgrade to a high-efficiency toilet','Ask TCPUD about eligible conservation rebates.','varies'],['🌱','Replace lawn with drought-tolerant plants','Reduce outdoor irrigation needs.','varies'],['💧','Fix leaky faucets','Small persistent leaks can add up over time.','varies'],['⏱️','Install a smart irrigation timer','Avoid watering when conditions do not require it.','varies'],['📱','Sign up for EyeOnWater','Find unexpected consumption spikes. '+eyeLink,'catch leaks early']]},
+ 4:{title:'Very high usage — Tier 4 rates apply',subtitle:'Check for leaks and evaluate high-volume water uses.',tips:[['📱','Sign up for EyeOnWater','Set automatic leak alerts to identify unusual usage. '+eyeLink,'catch leaks early'],['🌿','Inspect your irrigation system','Check sprinkler heads, valves, and lines for leaks.','varies'],['🌱','Consider drought-tolerant landscaping','Reducing turf can lower seasonal outdoor water demand.','varies'],['🚿','Install water-efficient fixtures','Ask TCPUD about rebates for qualifying fixtures.','varies']]}
+};
+// Safe rendering: DOM nodes and textContent prevent future tip text from becoming executable HTML.
+function node(tag, className, textValue) {
+ const el=document.createElement(tag);
+ if(className)el.className=className;
+ if(textValue!==undefined)el.textContent=textValue;
+ return el;
+}
+function renderTips(gallons, active, rates) {
+ const panel=$('tipsPanel'),tier=active+1,data=TIER_TIPS[tier];
+ panel.className='tips-panel visible tier-'+tier;
+ $('tipsTitle').textContent=data.title;
+ $('tipsSubtitle').textContent=tier===4?'You are paying '+fmt(rates[3])+' per 1,000 gallons for usage above 40,000 gallons.':data.subtitle;
+ const body=$('tipsBody');body.replaceChildren();
+ if(tier>1){
+  const target=[8000,20000,40000][tier-2];
+  if(gallons>target){
+   const saved=usageCost(gallons,rates)-usageCost(target,rates);
+   const callout=node('div','savings-callout');
+   const graphic=node('span',null,'💰');graphic.setAttribute('aria-hidden','true');
+   const details=node('div',null,'Reducing usage by '+(gallons-target).toLocaleString('en-US')+' gallons/month (to '+target.toLocaleString('en-US')+' gallons) could save approximately '+fmt(saved)+'/month, or '+fmt(saved*12)+'/year if sustained each month.');
+   callout.append(graphic,details);body.append(callout);
+  }
+ }
+ const list=node('ul','tip-list');
+ for(const tip of data.tips){
+  const li=node('li','tip-item');
+  const emoji=node('span','tip-emoji',tip[0]);emoji.setAttribute('aria-hidden','true');
+  const content=node('div','tip-content');
+  content.append(node('div','tip-action',tip[1]));
+  const detail=node('div','tip-detail',tip[2].replace(' '+eyeLink,''));
+  if(tip[2].includes(eyeLink)){
+   detail.append(' ');
+   const link=node('a',null,eyeLink);
+   link.href='https://www.tcpud.org/utility-services/water/cellular-water-meters';
+   // Same-tab navigation avoids unexpected new windows.
+   detail.append(link);
+  }
+  content.append(detail);
+  li.append(emoji,content,node('span','tip-savings',tip[3]));list.append(li);
+ }
+ body.append(list);
+ const rebate=node('a','rebate-link','TCPUD Conservation Rebates & Programs');
+ rebate.href='https://www.tcpud.org/conservation';
+ rebate.append(node('span','rebate-link-sub','Learn about qualifying fixtures and landscaping programs'));
+ body.append(rebate);
+}
+function toggleTips(){const open=$('tipsToggle').getAttribute('aria-expanded')!=='true';$('tipsToggle').setAttribute('aria-expanded',String(open));$('tipsBody').hidden=!open;}
+document.querySelectorAll('input[name="rateYear"]').forEach(el=>el.addEventListener('change',updateRateUI));$('baseRate').addEventListener('change',updateRateUI);$('calculateButton').addEventListener('click',()=>calculate(true));$('consumption').addEventListener('input',()=>{$('calculationStatus').textContent='';clearError();if($('consumption').value.trim())calculate(false);else resetDisplay();});$('consumption').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();calculate(true);}});$('consumption').addEventListener('blur',()=>{if($('consumption').value.trim())calculate(true);});$('tipsToggle').addEventListener('click',toggleTips);
+updateRateUI();
+</script>
+</body>
+</html>
